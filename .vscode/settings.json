@@ -1,0 +1,5 @@
+{
+    "codetogether.virtualCursorJoin": "ownVirtualCursor",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": false
+}
