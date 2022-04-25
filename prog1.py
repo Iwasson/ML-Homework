@@ -57,16 +57,18 @@ def loadLabel(row, training):
     label = convertedData[row][0]
     return label
 
-def runEpoch(training, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights):
-    totalRows = 0
+def runEpoch(training, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, startRows, endRows, momentum):
+    #totalRows = 0
     totalCorrect = 0
 
-    if training:
-        totalRows = len(trainingFile.index) - 1
-    else:
-        totalRows = len(testFile.index) - 1
+    #if training:
+    #    totalRows = len(trainingFile.index) - 1
+    #else:
+    #    totalRows = len(testFile.index) - 1
     
-    for row in range(totalRows):
+    #for row in range(totalRows):
+    #for row in range(0, (totalRows / 2)):
+    for row in range(startRows, endRows):
         inputs = loadImage(row, training)                               #stores all of the pixel values
         inputs = np.insert(inputs, [0], [bias], axis=0)                 #adds the bias to the inputs
         inputs = inputs.reshape(1,785)                                  #reshapes the inputs to be a row vector
@@ -104,14 +106,182 @@ def runEpoch(training, inputToHiddenWeights, hiddenToOutputLayerWeights, previou
             testingConfusionResults.append(prediction)
             testingConfusionLabels.append(label) 
 
-    return (totalCorrect / totalRows) * 100
+    return (totalCorrect / (endRows - startRows)) * 100, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights
 
 
-inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
-hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+#inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+#hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+#
+#previousInputWeights = np.zeros((785, hiddenUnits + 1))
+#previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
 
-previousInputWeights = np.zeros((785, hiddenUnits + 1))
-previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+#print("Training...")
+#print(runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1)))
 
-print("Training...")
-print(runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights))
+
+#vary the hidden units
+def experiment1():
+    hiddenUnits = 20
+    momentum = 0.9
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    print("Experiment 1")
+    print("20 Hidden units")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1), momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
+        print("Testing: ",accuracy)
+        print("")
+    
+
+    hiddenUnits = 50
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    print("50 Hidden units")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1), momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
+        print("Testing: ",accuracy)
+        print("")
+
+
+    hiddenUnits = 100
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    print("100 Hidden units")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1), momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
+        print("Testing: ",accuracy)
+        print("")
+    
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+    return 0
+
+#vary the momentum
+def experiment2():
+    hiddenUnits = 100
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    print("Experiment 2")
+    momentum = 0
+    print("0.1 momentum")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1), momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
+        print("Testing: ",accuracy)
+        print("")
+    
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    momentum = 0.25
+    print("0.25 momentum")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1), momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
+        print("Testing: ",accuracy)
+        print("")
+
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    momentum = 0.5
+    print("0.5 momentum")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) - 1), momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
+        print("Testing: ",accuracy)
+        print("")
+    
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+    
+    return 0
+
+#vary the sample size
+def experiment3():
+    momentum = 0.9
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    print("Experiment 3")
+    print("Half samples")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) / 2) - 1, momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) / 2) - 1, momentum)
+        print("Testing: ",accuracy)
+        print("")
+    
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    print("Quarter samples")
+    for i in range(MAXEPOCHS):
+        print("Epoch: " + str(i))
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) / 4) - 1, momentum)
+        print("Training: ",accuracy)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) / 4) - 1, momentum)
+        print("Testing: ",accuracy)
+        print("")
+    
+    inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
+    hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
+
+    previousInputWeights = np.zeros((785, hiddenUnits + 1))
+    previousHiddenLayerWeights = np.zeros((hiddenUnits + 1, 10))
+
+    return 0
+
+experiment1()
+experiment2()
+experiment3()
