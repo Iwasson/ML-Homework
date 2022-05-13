@@ -121,6 +121,7 @@ def runEpoch(training, inputToHiddenWeights, hiddenToOutputLayerWeights, previou
 
 #vary the hidden units
 def experiment1():
+    global testingConfusionLabels, testingConfusionResults
     hiddenUnits = 20
     momentum = 0.9
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
@@ -138,7 +139,9 @@ def experiment1():
         accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
         print("Testing: ",accuracy)
         print("")
-    
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
 
     hiddenUnits = 50
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
@@ -155,7 +158,9 @@ def experiment1():
         accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
         print("Testing: ",accuracy)
         print("")
-
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
 
     hiddenUnits = 100
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
@@ -172,7 +177,10 @@ def experiment1():
         accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
         print("Testing: ",accuracy)
         print("")
-    
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
+
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
 
@@ -182,6 +190,7 @@ def experiment1():
 
 #vary the momentum
 def experiment2():
+    global testingConfusionLabels, testingConfusionResults
     hiddenUnits = 100
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
@@ -199,7 +208,10 @@ def experiment2():
         accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
         print("Testing: ",accuracy)
         print("")
-    
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
+
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
 
@@ -215,6 +227,9 @@ def experiment2():
         accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
         print("Testing: ",accuracy)
         print("")
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
 
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
@@ -231,7 +246,10 @@ def experiment2():
         accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) - 1), momentum)
         print("Testing: ",accuracy)
         print("")
-    
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
+
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
 
@@ -242,7 +260,9 @@ def experiment2():
 
 #vary the sample size
 def experiment3():
+    global testingConfusionLabels, testingConfusionResults
     momentum = 0.9
+    hiddenUnits = 100
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
 
@@ -253,12 +273,15 @@ def experiment3():
     print("Half samples")
     for i in range(MAXEPOCHS):
         print("Epoch: " + str(i))
-        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) / 2) - 1, momentum)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, int(len(trainingFile.index) / 2) - 1, momentum)
         print("Training: ",accuracy)
-        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) / 2) - 1, momentum)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, len(testFile.index) - 1, momentum)
         print("Testing: ",accuracy)
         print("")
-    
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
+
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
 
@@ -268,12 +291,15 @@ def experiment3():
     print("Quarter samples")
     for i in range(MAXEPOCHS):
         print("Epoch: " + str(i))
-        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(trainingFile.index) / 4) - 1, momentum)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(True, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, int(len(trainingFile.index) / 4) - 1, momentum)
         print("Training: ",accuracy)
-        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, (len(testFile.index) / 4) - 1, momentum)
+        accuracy, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights = runEpoch(False, inputToHiddenWeights, hiddenToOutputLayerWeights, previousInputWeights, previousHiddenLayerWeights, 0, len(testFile.index) - 1, momentum)
         print("Testing: ",accuracy)
         print("")
-    
+    print(confusion_matrix(testingConfusionLabels, testingConfusionResults))
+    testingConfusionLabels = []
+    testingConfusionResults = []
+
     inputToHiddenWeights = randWeightMatrix(785, hiddenUnits + 1)
     hiddenToOutputLayerWeights = randWeightMatrix(hiddenUnits + 1, 10)
 
